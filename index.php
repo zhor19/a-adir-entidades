@@ -1,15 +1,7 @@
 <?php
-$mysqli = new mysqli("localhost", "root", "Cafeconleche", "social");
-
-if (isset($_POST["nombre"])) {
-    $nombre = $_POST["nombre"];
-    $email = $_POST["email"];
-    $mensaje = $_POST["comentario"];
-
-    $query = "Insert into comentarios (nombre,email,comentario) values ('$nombre','$email','$mensaje');";
-    $mysqli->query($query);
-}
+$mysql = new mysqli("localhost", "root", "Cafeconleche", "social");
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +16,7 @@ if (isset($_POST["nombre"])) {
 
 <body>
     <div class=" container border border-black container-fluid m-3 p-2">
-        <form method="post" action="index.php">
+        <form method="post" action="comentarios_sql.php?option=insertar">
             <h2><strong>Escriba un comentario por favor:</strong></h2>
             <label>Nombre</label><br>
             <input type="text" name="nombre"> <br>
@@ -42,7 +34,7 @@ if (isset($_POST["nombre"])) {
 
     $comentarios = "SELECT * FROM comentarios";
 
-    $consulta = $mysqli->query($comentarios);
+    $consulta = $mysql->query($comentarios);
 
 
 
@@ -64,7 +56,35 @@ if (isset($_POST["nombre"])) {
                 <?php echo $apellido ?>
                 <a href="mailto: <?php echo $email ?>"><?php echo $email ?></a>
                 <?php echo $fecha ?>
+                <span class="btn btn-danger"><a href="comentarios_sql.php?option=borrar&id=<?php echo $id ?>" class="text-light ">Borrar mensaje</a></span>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal<?php echo $id?>">
+                Editar
+            </button>
             </p>
+
+            
+            <div class="modal fade" id="exampleModal<?php echo $id?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edite su comentario</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="comentarios_sql.php?option=editar">
+                                <input type="hidden" name="id" value="<?php echo $id ?>">
+                                <label>Nombre</label><br>
+                                <input type="text" name="nombre" value="<?php echo $nombre ?>"> <br>
+                                <label>Email (opcional)</label><br>
+                                <input type="email" name="email" value="<?php echo $email ?>"> <br>
+                                <label>Mensaje</label><br>
+                                <textarea name="comentario"><?php echo $mensaje ?></textarea> <br>
+                                <button class="btn btn-primary m-2">Mandar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <p class="m-1"><?php echo $mensaje ?></p>
         </div>
     <?php
