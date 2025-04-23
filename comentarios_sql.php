@@ -1,6 +1,7 @@
 <?php
-$mysql = new mysqli("localhost", "root", "Cafeconleche", "social");
-
+include("./functions.php");
+include("./comentario_view.php");
+$mysql = connection();
 // delete
 $opcion = $_GET["option"];
 if ($opcion =="borrar") {
@@ -26,5 +27,6 @@ if ($opcion == "editar") {
     $query="update comentarios set nombre='$nombre',comentario='$mensaje',email='$email' where id='$id'";
     $mysql->query($query);
 }
-header("Location:index.php")
+header("Location:index.php");
+$mysql ->close()
 ?>
